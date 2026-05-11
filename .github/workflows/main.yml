@@ -2,7 +2,9 @@ name: Build APK
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
@@ -10,14 +12,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip build-essential git python3 python3-dev ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
-          sudo apt-get install -y libgstreamer1.0-gstreamer-lite-dev libgstreamer1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good
           pip3 install --user --upgrade buildozer cython virtualenv
 
       - name: Fabricar APK
         run: |
           export PATH=$PATH:~/.local/bin
-          buildozer android debug
-
+          # Esto acepta las licencias de Android automáticamente para que no dé error 100
+          yes | buildozer android debug
+          
       - name: Subir APK Final
         uses: actions/upload-artifact@v4
         with:
