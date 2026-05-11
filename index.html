@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NinjaScreenNox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0; background-color: #f5f5f5; font-family: sans-serif;
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; transition: 0.5s; overflow: hidden;
+        }
+        /* MODO AMOLED FORZADO */
+        body.amoled-active { background-color: #000000 !important; color: white; }
+        
+        #main-container {
+            width: 100%; max-width: 500px; height: 90vh;
+            display: flex; flex-direction: column; transition: 0.5s;
+        }
+        .app-title {
+            text-align: center; font-size: 2.5rem; color: #333;
+            margin-top: 20px; transition: 0.5s;
+        }
+        body.amoled-active .app-title {
+            color: #fff; text-shadow: 0 0 15px #ff00de;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
+        }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        .center-wrapper { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
+        .main-controls { display: flex; gap: 30px; }
+        .control-group { display: flex; align-items: center; gap: 20px; }
+        .bar {
+            width: 75px; height: 300px; border-radius: 40px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            align-items: center; padding: 20px 0; opacity: 0.2; transition: 0.3s;
+        }
+        .orange { background: linear-gradient(180deg, #FFB74D, #F57C00); }
+        .grey { background: linear-gradient(180deg, #424242, #212121); color: white; }
+        
+        /* SWITCHES */
+        .switch, .switch-vertical { position: relative; width: 50px; height: 26px; }
+        .switch input, .switch-vertical input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px;
+            left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #4CAF50; }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); justify-content: center; align-items: center; 
+        }
+        .modal-content { background: #fff; color: #000; padding: 30px; border-radius: 30px; width: 80%; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        <h1 class="app-title">NinjaScreen</h1>
+        <div class="header">
+            <div>
+                <span>AMOLED</span>
+                <label class="switch">
+                    <input type="checkbox" id="amoled-switch">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <i class="fas fa-cog" id="settings-icon" style="font-size: 24px;"></i>
+        </div>
+
+        <div class="center-wrapper">
+            <div class="main-controls">
+                <div class="control-group">
+                    <label class="switch-vertical">
+                        <input type="checkbox" id="switch-filtro">
+                        <span class="slider"></span>
+                    </label>
+                    <div id="filtro" class="bar orange"><span>+</span><span>-</span></div>
+                </div>
+                <div class="control-group">
+                    <div id="brillo" class="bar grey"><span>+</span><span>-</span></div>
+                    <label class="switch-vertical">
+                        <input type="checkbox" id="switch-brillo">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-menu" class="modal">
+            <div class="modal-content">
+                <h3>Settings</h3>
+                <p>Version: 1.0.0</p>
+                <button id="close-settings">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const amoled = document.getElementById('amoled-switch');
+        const swFiltro = document.getElementById('switch-filtro');
+        const swBrillo = document.getElementById('switch-brillo');
+
+        amoled.onclick = function() {
+            document.body.classList.toggle('amoled-active', this.checked);
+        };
+
+        swFiltro.onchange = function() {
+            document.getElementById('filtro').style.opacity = this.checked ? "1" : "0.2";
+        };
+
+        swBrillo.onchange = function() {
+            document.getElementById('brillo').style.opacity = this.checked ? "1" : "0.2";
+        };
+
+        document.getElementById('settings-icon
